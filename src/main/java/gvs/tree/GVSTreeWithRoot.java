@@ -64,8 +64,8 @@ public class GVSTreeWithRoot {
   private final String BINARYNODE = "BinaryNode";
   private final String TREEROOTID = "TreeRootId";
   // private final String CHILDID="Childid";
-  private final String RIGTHCHILD = "Rigthchild";
-  private final String LEFTCHILD = "Leftchild";
+  private final String RIGHT_CHILD = "Rigthchild";
+  private final String LEFT_CHILD = "Leftchild";
 
   private static final Logger logger = LoggerFactory
       .getLogger(GVSTreeWithRoot.class);
@@ -225,7 +225,7 @@ public class GVSTreeWithRoot {
           } else {
             logger.debug("LeftChild null");
           }
-          tmpNode = ((GVSBinaryTreeNode) pNode).getGVSRigthChild();
+          tmpNode = ((GVSBinaryTreeNode) pNode).getGVSRightChild();
           if (tmpNode != null) {
             buildNode(pParent, tmpNode);
           } else {
@@ -319,15 +319,15 @@ public class GVSTreeWithRoot {
     }
 
     GVSBinaryTreeNode leftNode = pNode.getGVSLeftChild();
-    GVSBinaryTreeNode rigthNode = pNode.getGVSRigthChild();
+    GVSBinaryTreeNode rigthNode = pNode.getGVSRightChild();
     if (leftNode != null) {
-      Element leftChild = binaryNode.addElement(LEFTCHILD);
+      Element leftChild = binaryNode.addElement(LEFT_CHILD);
       leftChild.addText(String.valueOf(leftNode.hashCode()));
     } else {
       logger.debug("Leftchild null");
     }
     if (rigthNode != null) {
-      Element rigthChild = binaryNode.addElement(RIGTHCHILD);
+      Element rigthChild = binaryNode.addElement(RIGHT_CHILD);
       rigthChild.addText(String.valueOf(rigthNode.hashCode()));
     } else {
       logger.debug("Rigthchild null");
@@ -348,7 +348,7 @@ public class GVSTreeWithRoot {
         GVSBinaryTreeNode nodeToCheck = (GVSBinaryTreeNode) checkToOrigIt
             .next();
         if (nodeToCheck.getGVSLeftChild() == actualNode
-            || nodeToCheck.getGVSRigthChild() == actualNode) {
+            || nodeToCheck.getGVSRightChild() == actualNode) {
           counter++;
         }
       }

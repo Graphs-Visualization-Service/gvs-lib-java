@@ -65,8 +65,8 @@ public class GVSTreeWithCollection {
   // private final String DEFAULTNODE="DefaultNode";
   private final String BINARYNODE = "BinaryNode";
   // private final String CHILDID="Childid";
-  private final String RIGTHCHILD = "Rigthchild";
-  private final String LEFTCHILD = "Leftchild";
+  private final String RIGHT_CHILD = "Rigthchild";
+  private final String LEFT_CHILD = "Leftchild";
 
   // Logger
   private static final Logger logger = LoggerFactory
@@ -435,10 +435,10 @@ public class GVSTreeWithCollection {
     }
 
     GVSBinaryTreeNode leftNode = pNode.getGVSLeftChild();
-    GVSBinaryTreeNode rigthNode = pNode.getGVSRigthChild();
+    GVSBinaryTreeNode rightNode = pNode.getGVSRightChild();
     if (leftNode != null) {
       if (this.gvsTreeNodes.contains(leftNode)) {
-        Element leftChild = binaryNode.addElement(LEFTCHILD);
+        Element leftChild = binaryNode.addElement(LEFT_CHILD);
         leftChild.addText(String.valueOf(leftNode.hashCode()));
         logger.info("Leftchild found");
       } else {
@@ -446,13 +446,13 @@ public class GVSTreeWithCollection {
             + " existiert nicht in der Collection");
       }
     }
-    if (rigthNode != null) {
-      if (this.gvsTreeNodes.contains(rigthNode)) {
-        Element rigthChild = binaryNode.addElement(RIGTHCHILD);
-        rigthChild.addText(String.valueOf(rigthNode.hashCode()));
-        logger.info("Rigthchild found");
+    if (rightNode != null) {
+      if (this.gvsTreeNodes.contains(rightNode)) {
+        Element rightChild = binaryNode.addElement(RIGHT_CHILD);
+        rightChild.addText(String.valueOf(rightNode.hashCode()));
+        logger.info("Right child found");
       } else {
-        logger.warn("Rigthchild " + rigthNode.getNodeLabel()
+        logger.warn("Right child " + rightNode.getNodeLabel()
             + " existiert nicht in der Collection");
       }
     }
@@ -472,7 +472,7 @@ public class GVSTreeWithCollection {
         GVSBinaryTreeNode nodeToCheck = (GVSBinaryTreeNode) checkToOrigIt
             .next();
         if (nodeToCheck.getGVSLeftChild() == actualNode
-            || nodeToCheck.getGVSRigthChild() == actualNode) {
+            || nodeToCheck.getGVSRightChild() == actualNode) {
           counter++;
         }
       }
