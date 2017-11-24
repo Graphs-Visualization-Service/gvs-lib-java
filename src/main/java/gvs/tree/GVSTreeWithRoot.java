@@ -16,17 +16,17 @@ import gvs.connection.XMLConnection;
 import gvs.typ.node.GVSNodeTyp;
 
 /**
- * 
  * This class takes up only a rootnode. For transfer, the class build the tree
  * recursivly and add the nodes to a collection. Null values are translated on
  * standard or empty strings It is to be made certain that the tree does not
- * contain cycles. The connectioninformation have to be set over Properties.
+ * contain cycles. The connectioninformation have to be set over Properties:
+ * 
  * -DGVSPortFile or -DGVSHost and -DGVSPort are supported.
  * 
- * Actually only BinaryTrees are supported, because the Layoutalgorithm are
- * missing
+ * Actually only BinaryTrees are supported, because the layout algorithm are
+ * missing.
  * 
- * * @author mkoller
+ * @author mkoller
  * 
  */
 public class GVSTreeWithRoot {
@@ -339,11 +339,11 @@ public class GVSTreeWithRoot {
     logger.info("Check for Cycles");
     boolean hasCycle = false;
     Vector<GVSTreeNode> toCheck = new Vector<GVSTreeNode>(gvsTreeNodes);
-    Iterator checkerIt = toCheck.iterator();
+    Iterator<GVSTreeNode> checkerIt = toCheck.iterator();
     while (checkerIt.hasNext()) {
       int counter = 0;
       GVSBinaryTreeNode actualNode = (GVSBinaryTreeNode) checkerIt.next();
-      Iterator checkToOrigIt = gvsTreeNodes.iterator();
+      Iterator<GVSTreeNode> checkToOrigIt = gvsTreeNodes.iterator();
       while (checkToOrigIt.hasNext()) {
         GVSBinaryTreeNode nodeToCheck = (GVSBinaryTreeNode) checkToOrigIt
             .next();

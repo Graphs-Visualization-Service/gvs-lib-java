@@ -22,11 +22,12 @@ import gvs.typ.node.GVSNodeTyp;
  * This class takes up those nodes to a Collection and transfers it to the
  * server. It is to be made certain that the tree does not contain cycles. It
  * does not play a role, if values are doubly added or removed. Null values are
- * translated on standard or empty strings The connectioninformation have to
- * beset over Properties. -DGVSPortFile or -DGVSHost and -DGVSPort are
- * supported.
+ * translated on standard or empty strings. The connection information have to
+ * be set over Properties:
  * 
- * Actually only BinaryTrees are supported, because the Layoutalgorhitm are
+ * -DGVSPortFile or -DGVSHost and -DGVSPort are supported.
+ * 
+ * Actually only BinaryTrees are supported, because the layout algorithm are
  * missing
  * 
  * @author mkoller
@@ -80,7 +81,7 @@ public class GVSTreeWithCollection {
   public GVSTreeWithCollection(String pGVSTreeName) {
     this.gvsTreeId = System.currentTimeMillis();
     this.gvsTreeName = pGVSTreeName;
-    gvsTreeNodes = new HashSet<GVSTreeNode>();
+    gvsTreeNodes = new HashSet<>();
 
     if (gvsTreeName.equals(null)) {
       gvsTreeName = "";
@@ -187,9 +188,9 @@ public class GVSTreeWithCollection {
    * 
    * @param pGVSTreeNodes
    */
-  public void add(Collection pGVSTreeNodes) {
+  public void add(Collection<GVSTreeNode> pGVSTreeNodes) {
     logger.debug("Start add a Collection");
-    Iterator componentIterator = pGVSTreeNodes.iterator();
+    Iterator<GVSTreeNode> componentIterator = pGVSTreeNodes.iterator();
     while (componentIterator.hasNext()) {
       Object tmp = componentIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -257,9 +258,9 @@ public class GVSTreeWithCollection {
    * 
    * @param pGVSTreeNodes
    */
-  public void remove(Collection pGVSTreeNodes) {
+  public void remove(Collection<GVSTreeNode> pGVSTreeNodes) {
     logger.debug("Start remove a Collection");
-    Iterator componentIterator = pGVSTreeNodes.iterator();
+    Iterator<GVSTreeNode> componentIterator = pGVSTreeNodes.iterator();
     while (componentIterator.hasNext()) {
       Object tmp = componentIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -312,7 +313,7 @@ public class GVSTreeWithCollection {
 
     Element nodes = docRoot.addElement(NODES);
     logger.debug("build Node-Elements");
-    Iterator nodeIterator = gvsTreeNodes.iterator();
+    Iterator<GVSTreeNode> nodeIterator = gvsTreeNodes.iterator();
     while (nodeIterator.hasNext()) {
       Object tmp = nodeIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -463,11 +464,11 @@ public class GVSTreeWithCollection {
     logger.info("Check for Cycles");
     boolean hasCycle = false;
     Vector<GVSTreeNode> toCheck = new Vector<GVSTreeNode>(gvsTreeNodes);
-    Iterator checkerIt = toCheck.iterator();
+    Iterator<GVSTreeNode> checkerIt = toCheck.iterator();
     while (checkerIt.hasNext()) {
       int counter = 0;
       GVSBinaryTreeNode actualNode = (GVSBinaryTreeNode) checkerIt.next();
-      Iterator checkToOrigIt = gvsTreeNodes.iterator();
+      Iterator<GVSTreeNode> checkToOrigIt = gvsTreeNodes.iterator();
       while (checkToOrigIt.hasNext()) {
         GVSBinaryTreeNode nodeToCheck = (GVSBinaryTreeNode) checkToOrigIt
             .next();

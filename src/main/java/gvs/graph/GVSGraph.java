@@ -23,16 +23,13 @@ import gvs.typ.vertex.GVSIconVertexTyp;
 import gvs.typ.vertex.GVSVertexTyp;
 
 /**
+ * This class represents the graph. Null values are translated on standard or
+ * empty strings. The class works over references. It does not play a role, if
+ * values are doubly added or removed. The connectioninformation have to be set
+ * over Properties. -DGVSPortFile or -DGVSHost and -DGVSPort are supported.
  * 
  * @author mkoller
- *
- *         This class represents the graph. Null values are translated on
- *         standard or empty strings. The class works over references. It does
- *         not play a role, if values are doubly added or removed. The
- *         connectioninformation have to be set over Properties. -DGVSPortFile
- *         or -DGVSHost and -DGVSPort are supported.
- * 
- **/
+ */
 
 public class GVSGraph {
 
@@ -221,9 +218,9 @@ public class GVSGraph {
    * 
    * @param pGVSComponent
    */
-  public void add(Collection pGVSComponent) {
+  public void add(Collection<Object> pGVSComponent) {
     logger.debug("Beginn to add a Collection");
-    Iterator componentIterator = pGVSComponent.iterator();
+    Iterator<Object> componentIterator = pGVSComponent.iterator();
     while (componentIterator.hasNext()) {
 
       Object tmp = componentIterator.next();
@@ -298,8 +295,8 @@ public class GVSGraph {
    */
   public void remove(GVSDefaultVertex pGVSVertex) {
     logger.debug("Begin to remove DefaultVertex");
-    Vector<GVSGraphEdge> toRemove = new Vector<GVSGraphEdge>();
-    Iterator edgeIt = gvsGraphEdges.iterator();
+    Vector<GVSGraphEdge> toRemove = new Vector<>();
+    Iterator<GVSGraphEdge> edgeIt = gvsGraphEdges.iterator();
     while (edgeIt.hasNext()) {
       Object tmp = edgeIt.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -326,7 +323,7 @@ public class GVSGraph {
         }
       }
     }
-    Iterator removeIt = toRemove.iterator();
+    Iterator<GVSGraphEdge> removeIt = toRemove.iterator();
     while (removeIt.hasNext()) {
       gvsGraphEdges.remove(removeIt.next());
       logger.debug("Remove founded Edges");
@@ -342,8 +339,8 @@ public class GVSGraph {
    */
   public void remove(GVSRelativeVertex pGVSVertex) {
     logger.debug("Begin to remove relativtVertex");
-    Vector<GVSGraphEdge> toRemove = new Vector<GVSGraphEdge>();
-    Iterator edgeIt = gvsGraphEdges.iterator();
+    Vector<GVSGraphEdge> toRemove = new Vector<>();
+    Iterator<GVSGraphEdge> edgeIt = gvsGraphEdges.iterator();
     while (edgeIt.hasNext()) {
       Object tmp = edgeIt.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -370,7 +367,7 @@ public class GVSGraph {
         }
       }
     }
-    Iterator removeIt = toRemove.iterator();
+    Iterator<GVSGraphEdge> removeIt = toRemove.iterator();
     while (removeIt.hasNext()) {
       gvsGraphEdges.remove(removeIt.next());
       logger.debug("remove founded Edges");
@@ -404,9 +401,9 @@ public class GVSGraph {
    * 
    * @param pGVSComponent
    */
-  public void remove(Collection pGVSComponent) {
+  public void remove(Collection<Object> pGVSComponent) {
     logger.debug("Beginn to remove a Collection");
-    Iterator componentIterator = pGVSComponent.iterator();
+    Iterator<Object> componentIterator = pGVSComponent.iterator();
     while (componentIterator.hasNext()) {
       Object tmp = componentIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -417,12 +414,9 @@ public class GVSGraph {
         } else if (interfaces[count] == GVSUndirectedEdge.class) {
           logger.debug("UndirectedEdge found");
           this.remove((GVSUndirectedEdge) tmp);
-        }
-
-        else if (interfaces[count] == GVSDefaultVertex.class) {
+        } else if (interfaces[count] == GVSDefaultVertex.class) {
           logger.debug("DefaultVertex found");
           this.remove((GVSDefaultVertex) tmp);
-
         } else if (interfaces[count] == GVSRelativeVertex.class) {
           logger.debug("RelativVertex found");
           this.remove((GVSRelativeVertex) tmp);
@@ -513,7 +507,7 @@ public class GVSGraph {
 
     Element vertizes = docRoot.addElement(VERTIZES);
     logger.debug("Build Vertizes-Elements");
-    Iterator vertexIterator = gvsGraphVertizes.iterator();
+    Iterator<GVSDefaultVertex> vertexIterator = gvsGraphVertizes.iterator();
     while (vertexIterator.hasNext()) {
       Object tmp = vertexIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -543,7 +537,7 @@ public class GVSGraph {
 
     Element edges = docRoot.addElement(EDGES);
     logger.debug("Build Edge-Elements");
-    Iterator edgeIterator = gvsGraphEdges.iterator();
+    Iterator<GVSGraphEdge> edgeIterator = gvsGraphEdges.iterator();
     while (edgeIterator.hasNext()) {
       Object tmp = edgeIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -744,7 +738,7 @@ public class GVSGraph {
     boolean vertex1Exist = false;
     boolean vertex2Exist = false;
 
-    Iterator vertexIt = gvsGraphVertizes.iterator();
+    Iterator<GVSDefaultVertex> vertexIt = gvsGraphVertizes.iterator();
     while (vertexIt.hasNext()) {
       GVSDefaultVertex tmp = (GVSDefaultVertex) vertexIt.next();
       if (tmp == vertex1) {
@@ -811,7 +805,7 @@ public class GVSGraph {
     boolean vertex1Exist = false;
     boolean vertex2Exist = false;
 
-    Iterator vertexIt = gvsGraphVertizes.iterator();
+    Iterator<GVSDefaultVertex> vertexIt = gvsGraphVertizes.iterator();
     while (vertexIt.hasNext()) {
       GVSDefaultVertex tmp = (GVSDefaultVertex) vertexIt.next();
       if (tmp == vertex1) {

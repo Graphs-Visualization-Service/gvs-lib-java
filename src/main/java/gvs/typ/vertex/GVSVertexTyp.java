@@ -2,10 +2,9 @@
 package gvs.typ.vertex;
 
 /**
+ * Super class for GVSEllipseTyp,GVSIconTyp and GVSNodeTyp do not use.
  * 
  * @author mkoller
- *
- * Super class for GVSEllipseTyp,GVSIconTyp and GVSNodeTyp do not use.
  */
 public abstract class GVSVertexTyp {
 
