@@ -1,0 +1,76 @@
+apply plugin: 'java'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'net.saliman.cobertura'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+sourceCompatibility = 1.8
+
+sourceSets {
+	main {
+		resources {
+			srcDirs = ["src/main/java", "src/main/resources"]
+		}
+	}
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+     maven {
+        url "https://mvnrepository.com/artifact/org.dom4j/dom4j"
+    }
+}
+
+dependencies {
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+	compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+	compile group: 'org.dom4j', name: 'dom4j', version: '2.1.0'
+	
+	testCompile("org.junit.jupiter:junit-jupiter-api:5.0.1")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.1")	
+}
+
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "net.saliman:gradle-cobertura-plugin:2.5.0"
+    	classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
+  }
+}
+
+junitPlatform {
+    platformVersion '1.0.0'
+}
+
+jar {
+   	from {configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+checkstyle {
+  ignoreFailures = false
+  showViolations = true
+  configFile = file("${project.rootDir}/checkstyle.xml")
+}
+
+findbugs {
+  ignoreFailures = true
+  reportsDir = file("$project.buildDir/reports/findbugs")
+  effort = "max"
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+cobertura {
+  coverageFormats = ['xml']
+}
