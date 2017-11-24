@@ -41,7 +41,6 @@ public class GVSTreeWithCollection {
   private XMLConnection xmlConnection = null;
   private long gvsTreeId = 0;
   private String gvsTreeName = "";
-  private int maxLabelLength = 0;
   private HashSet<GVSTreeNode> gvsTreeNodes = null;
 
   // Config
@@ -59,7 +58,6 @@ public class GVSTreeWithCollection {
   private final String LINESTYLE = "Linestyle";
   private final String LINETHICKNESS = "Linethickness";
   private final String STANDARD = "standard";
-  private final String MAXLABELLENGTH = "MaxLabelLength";
 
   // Tree
   private final String TREE = "Tree";
@@ -294,16 +292,6 @@ public class GVSTreeWithCollection {
   }
 
   /**
-   * Set the MaxLabelLength
-   * 
-   * @param pMaxLabelLength
-   */
-  public void setMaxLabelLength(int pMaxLabelLength) {
-    this.maxLabelLength = pMaxLabelLength;
-    logger.debug("MaxLabelLength set: " + pMaxLabelLength);
-  }
-
-  /**
    * Build the Xml and send it. It examined whether the tree cycles contains. If
    * the Client terminated, since this is not permitted
    */
@@ -322,9 +310,6 @@ public class GVSTreeWithCollection {
     tree.addAttribute(ATTRIBUTEID, String.valueOf(this.gvsTreeId));
     Element treeLabel = tree.addElement(LABEL);
     treeLabel.addText(this.gvsTreeName);
-
-    Element maxLabelLength = tree.addElement(MAXLABELLENGTH);
-    maxLabelLength.addText(String.valueOf(this.maxLabelLength));
 
     Element nodes = docRoot.addElement(NODES);
     logger.debug("build Node-Elements");

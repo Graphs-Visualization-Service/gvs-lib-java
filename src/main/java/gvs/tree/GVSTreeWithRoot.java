@@ -39,7 +39,6 @@ public class GVSTreeWithRoot {
   private long gvsTreeId = 0;
   private String gvsTreeName = "";
   private GVSTreeNode gvsTreeRoot = null;
-  private int maxLabelLength = 0;
 
   // Config
   private final String GVSPORTFILE = "GVSPortFile";
@@ -56,7 +55,6 @@ public class GVSTreeWithRoot {
   private final String LINESTYLE = "Linestyle";
   private final String LINETHICKNESS = "Linethickness";
   private final String STANDARD = "standard";
-  private final String MAXLABELLENGTH = "MaxLabelLength";
 
   // Tree
   private final String TREE = "Tree";
@@ -160,16 +158,6 @@ public class GVSTreeWithRoot {
   }
 
   /**
-   * Set the MaxLabelLength
-   * 
-   * @param pMaxLabelLength
-   */
-  public void setMaxLabelLength(int pMaxLabelLength) {
-    logger.debug("maxLabelLength set: " + pMaxLabelLength);
-    this.maxLabelLength = pMaxLabelLength;
-  }
-
-  /**
    * Build the tree and check for cycles. If the tree is ok, it will be send to
    * the server
    *
@@ -185,9 +173,6 @@ public class GVSTreeWithRoot {
     tree.addAttribute(ATTRIBUTEID, String.valueOf(this.gvsTreeId));
     Element treeLabel = tree.addElement(LABEL);
     treeLabel.addText(this.gvsTreeName);
-
-    Element maxLabelLength = tree.addElement(MAXLABELLENGTH);
-    maxLabelLength.addText(String.valueOf(this.maxLabelLength));
 
     if (this.gvsTreeRoot != null) {
       logger.debug("build Node-Elements");
