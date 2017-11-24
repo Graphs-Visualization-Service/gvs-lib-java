@@ -1,6 +1,6 @@
 package gvs.graph;
 
-import gvs.typ.vertex.GVSVertexTyp;
+import gvs.styles.GVSStyle;
 
 /**
  * This interface is needed for the realization of a DefaultVertex
@@ -21,5 +21,5 @@ public interface GVSDefaultVertex {
    * 
    * @return the typ. If it is null the default typ will be set
    */
-  public abstract GVSVertexTyp getGVSVertexTyp();
+  public abstract GVSStyle getStyle();
 }

@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gvs.connection.XMLConnection;
-import gvs.typ.node.GVSNodeTyp;
+import gvs.styles.GVSStyle;
 
 /**
  * 
@@ -188,9 +188,10 @@ public class GVSTreeWithCollection {
    * 
    * @param pGVSTreeNodes
    */
-  public void add(Collection<GVSTreeNode> pGVSTreeNodes) {
+  public void add(Collection<? extends GVSTreeNode> pGVSTreeNodes) {
     logger.debug("Start add a Collection");
-    Iterator<GVSTreeNode> componentIterator = pGVSTreeNodes.iterator();
+    Iterator<? extends GVSTreeNode> componentIterator = pGVSTreeNodes
+        .iterator();
     while (componentIterator.hasNext()) {
       Object tmp = componentIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
@@ -405,7 +406,7 @@ public class GVSTreeWithCollection {
     Element binaryNode = pParent.addElement(BINARYNODE);
     binaryNode.addAttribute(ATTRIBUTEID, String.valueOf(pNode.hashCode()));
 
-    GVSNodeTyp nodeTyp = pNode.getNodeTyp();
+    GVSStyle nodeStyle = pNode.getStyle();
 
     Element label = binaryNode.addElement(LABEL);
     String theLabel = pNode.getNodeLabel();
@@ -421,12 +422,12 @@ public class GVSTreeWithCollection {
     }
     label.addText(theLabel);
 
-    if (nodeTyp != null) {
+    if (nodeStyle != null) {
 
-      lineColor.addText(nodeTyp.getLineColor().name());
-      lineStyle.addText(nodeTyp.getLineStyle().name());
-      lineThick.addText(nodeTyp.getLineThickness().name());
-      fillColor.addText(nodeTyp.getFillColor().name());
+      lineColor.addText(nodeStyle.getLineColor().name());
+      lineStyle.addText(nodeStyle.getLineStyle().name());
+      lineThick.addText(nodeStyle.getLineThickness().name());
+      fillColor.addText(nodeStyle.getFillColor().name());
     } else {
       logger.info("No Tyo. Standard will be set");
       lineColor.addText(STANDARD);

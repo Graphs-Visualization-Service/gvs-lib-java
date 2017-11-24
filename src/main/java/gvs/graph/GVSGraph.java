@@ -15,22 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gvs.connection.XMLConnection;
-import gvs.typ.edge.GVSEdgeTyp;
-import gvs.typ.graph.GVSGraphTyp;
-import gvs.typ.graph.GVSGraphTyp.Background;
-import gvs.typ.vertex.GVSEllipseVertexTyp;
-import gvs.typ.vertex.GVSIconVertexTyp;
-import gvs.typ.vertex.GVSVertexTyp;
+import gvs.styles.GVSStyle;
 
 /**
  * This class represents the graph. Null values are translated on standard or
  * empty strings. The class works over references. It does not play a role, if
- * values are doubly added or removed. The connectioninformation have to be set
+ * values are doubly added or removed. The connection information have to be set
  * over Properties. -DGVSPortFile or -DGVSHost and -DGVSPort are supported.
  * 
  * @author mkoller
  */
-
 public class GVSGraph {
 
   // Connection
@@ -42,8 +36,6 @@ public class GVSGraph {
   // Datas
   private long gvsGraphId = 0;
   private String gvsGraphName = "";
-  private GVSGraphTyp gvsGraphTyp = null;
-  private int maxLabelLength = 0;
 
   // Config
   private final String GVSPORTFILE = "GVSPortFile";
@@ -59,12 +51,9 @@ public class GVSGraph {
   private final String LINECOLOR = "Linecolor";
   private final String LINESTYLE = "Linestyle";
   private final String LINETHICKNESS = "Linethickness";
-  private final String STANDARD = "standard";
 
   // Graph
   private final String GRAPH = "Graph";
-  private final String BACKGROUND = "Background";
-  private final String MAXLABELLENGTH = "MaxLabelLength";
   private final String VERTIZES = "Vertizes";
   private final String RELATIVVERTEX = "RelativVertex";
   private final String DEFAULTVERTEX = "DefaultVertex";
@@ -81,20 +70,7 @@ public class GVSGraph {
   private HashSet<GVSDefaultVertex> gvsGraphVertizes = null;
   private HashSet<GVSGraphEdge> gvsGraphEdges = null;
 
-  // Deafaultgraphtyp
-  private static GVSGraphTyp defaultGraphTyp = new GVSGraphTyp(
-      Background.standard);
-
   private static final Logger logger = LoggerFactory.getLogger(GVSGraph.class);
-
-  /**
-   * Creates a Graph with default background
-   * 
-   * @param pGVSGraphName
-   */
-  public GVSGraph(String pGVSGraphName) {
-    this(pGVSGraphName, null);
-  }
 
   /**
    * Creates the Graph-Object. Id will be set to System.currentTimeMillis() If
@@ -103,17 +79,12 @@ public class GVSGraph {
    * @param pGVSGraphName
    * @param pGVSGraphTyp
    */
-  public GVSGraph(String pGVSGraphName, GVSGraphTyp pGVSGraphTyp) {
+  public GVSGraph(String pGVSGraphName) {
     this.gvsGraphId = System.currentTimeMillis();
     this.gvsGraphName = pGVSGraphName;
     if (this.gvsGraphName == null) {
       this.gvsGraphName = "";
       logger.debug("GraphName null. Set it to empty");
-    }
-    this.gvsGraphTyp = pGVSGraphTyp;
-    if (this.gvsGraphTyp == null) {
-      this.gvsGraphTyp = defaultGraphTyp;
-      logger.debug("GraphTyp null. Set it to default");
     }
 
     this.gvsGraphEdges = new HashSet<GVSGraphEdge>();
@@ -218,11 +189,10 @@ public class GVSGraph {
    * 
    * @param pGVSComponent
    */
-  public void add(Collection<Object> pGVSComponent) {
+  public void add(Collection<?> pGVSComponent) {
     logger.debug("Beginn to add a Collection");
-    Iterator<Object> componentIterator = pGVSComponent.iterator();
+    Iterator<?> componentIterator = pGVSComponent.iterator();
     while (componentIterator.hasNext()) {
-
       Object tmp = componentIterator.next();
       Class<?>[] interfaces = tmp.getClass().getInterfaces();
       for (int count = 0; count < interfaces.length; count++) {
@@ -475,16 +445,6 @@ public class GVSGraph {
   }
 
   /**
-   * Set the maxLabelLength.
-   * 
-   * @param pMaxLength
-   */
-  public void setMaxLabelLength(int pMaxLength) {
-    this.maxLabelLength = pMaxLength;
-    logger.debug("MaxLabelLength set to " + maxLabelLength);
-  }
-
-  /**
    * Build the Xml and send it to the GVSServer
    *
    */
@@ -500,10 +460,6 @@ public class GVSGraph {
     graph.addAttribute(ATTRIBUTEID, String.valueOf(this.gvsGraphId));
     Element graphLabel = graph.addElement(LABEL);
     graphLabel.addText(this.gvsGraphName);
-    Element graphBackground = graph.addElement(BACKGROUND);
-    graphBackground.addText(this.gvsGraphTyp.getBackground().name());
-    Element maxLabelLength = graph.addElement(MAXLABELLENGTH);
-    maxLabelLength.addText(String.valueOf(this.maxLabelLength));
 
     Element vertizes = docRoot.addElement(VERTIZES);
     logger.debug("Build Vertizes-Elements");
@@ -589,67 +545,29 @@ public class GVSGraph {
     logger.debug("Create DefaultVertex-->XML");
     Element defaultVertex = pParent.addElement(DEFAULTVERTEX);
     defaultVertex.addAttribute(ATTRIBUTEID, String.valueOf(pVertex.hashCode()));
-    GVSVertexTyp vertexTypNull = pVertex.getGVSVertexTyp();
-    if (vertexTypNull != null) {
-      if (pVertex.getGVSVertexTyp().getClass() == GVSEllipseVertexTyp.class) {
-        logger.debug("Create DefaultVertex with ELLIPSE");
-        GVSEllipseVertexTyp vertexTyp = ((GVSEllipseVertexTyp) (pVertex
-            .getGVSVertexTyp()));
-        Element label = defaultVertex.addElement(LABEL);
-        String vertexLabel = pVertex.getGVSVertexLabel();
-        if (vertexLabel == null) {
-          vertexLabel = "";
-        }
-        label.addText(vertexLabel);
-        Element lineColor = defaultVertex.addElement(LINECOLOR);
-        lineColor.addText(vertexTyp.getLineColor().name());
-        Element lineStyle = defaultVertex.addElement(LINESTYLE);
-        lineStyle.addText(vertexTyp.getLineStyle().name());
-        Element lineThick = defaultVertex.addElement(LINETHICKNESS);
-        lineThick.addText(vertexTyp.getLineThickness().name());
-        Element fillColor = defaultVertex.addElement(FILLCOLOR);
-        fillColor.addText(vertexTyp.getFillColor().name());
-      } else if (pVertex.getGVSVertexTyp()
-          .getClass() == GVSIconVertexTyp.class) {
-        logger.debug("Create DefaultVertex with ICON");
-        GVSIconVertexTyp vertexTyp = ((GVSIconVertexTyp) (pVertex
-            .getGVSVertexTyp()));
-        Element label = defaultVertex.addElement(LABEL);
-        String vertexLabel = pVertex.getGVSVertexLabel();
-        if (vertexLabel == null) {
-          vertexLabel = "";
-        }
-        label.addText(vertexLabel);
-        Element lineColor = defaultVertex.addElement(LINECOLOR);
-        lineColor.addText(vertexTyp.getLineColor().name());
-        Element lineStyle = defaultVertex.addElement(LINESTYLE);
-        lineStyle.addText(vertexTyp.getLineStyle().name());
-        Element lineThick = defaultVertex.addElement(LINETHICKNESS);
-        lineThick.addText(vertexTyp.getLineThickness().name());
-        Element icon = defaultVertex.addElement(ICON);
-        icon.addText(vertexTyp.getIcon().name());
-      } else {
-        logger.error("VertexTyp isn't a ELLIPSE or ICON");
-      }
-    } else {
-      logger.info("No Typ. Standard will be set");
-      Element label = defaultVertex.addElement(LABEL);
-      String vertexLabel = pVertex.getGVSVertexLabel();
-      if (vertexLabel == null) {
-        vertexLabel = "";
-      }
-      // TRACE
-      label.addText(vertexLabel);
-      Element lineColor = defaultVertex.addElement(LINECOLOR);
-      lineColor.addText(STANDARD);
-      Element lineStyle = defaultVertex.addElement(LINESTYLE);
-      lineStyle.addText(STANDARD);
-      Element lineThick = defaultVertex.addElement(LINETHICKNESS);
-      lineThick.addText(STANDARD);
-      Element fillColor = defaultVertex.addElement(FILLCOLOR);
-      fillColor.addText(STANDARD);
+
+    GVSStyle nodeStyle = pVertex.getStyle();
+    Element label = defaultVertex.addElement(LABEL);
+    String vertexLabel = pVertex.getGVSVertexLabel();
+    if (vertexLabel == null) {
+      vertexLabel = "";
     }
-    logger.debug("Finish create DefaultVertex-->XML");
+
+    // TODO check if style.name() is okay -> or better get color string
+    label.addText(vertexLabel);
+    Element lineColor = defaultVertex.addElement(LINECOLOR);
+    lineColor.addText(nodeStyle.getLineColor().name());
+    Element lineStyle = defaultVertex.addElement(LINESTYLE);
+    lineStyle.addText(nodeStyle.getLineStyle().name());
+    Element lineThick = defaultVertex.addElement(LINETHICKNESS);
+    lineThick.addText(nodeStyle.getLineThickness().name());
+    Element fillColor = defaultVertex.addElement(FILLCOLOR);
+    fillColor.addText(nodeStyle.getFillColor().name());
+
+    if (nodeStyle.getIcon() != null) {
+      Element icon = defaultVertex.addElement(ICON);
+      icon.addText(nodeStyle.getIcon().name());
+    }
   }
 
   private void buildRelativVertex(Element pParent, GVSRelativeVertex pVertex) {
@@ -657,78 +575,31 @@ public class GVSGraph {
     Element relativeVertex = pParent.addElement(RELATIVVERTEX);
     relativeVertex.addAttribute(ATTRIBUTEID,
         String.valueOf(pVertex.hashCode()));
-    GVSVertexTyp vertexTypNull = pVertex.getGVSVertexTyp();
-    if (vertexTypNull != null) {
-      if (pVertex.getGVSVertexTyp().getClass() == GVSEllipseVertexTyp.class) {
-        logger.debug("Create DefaultVertex with ELLIPSE");
-        GVSEllipseVertexTyp vertexTyp = ((GVSEllipseVertexTyp) (pVertex
-            .getGVSVertexTyp()));
-        Element label = relativeVertex.addElement(LABEL);
-        String vertexLabel = pVertex.getGVSVertexLabel();
-        if (vertexLabel == null) {
-          vertexLabel = "";
-        }
-        label.addText(vertexLabel);
-        Element lineColor = relativeVertex.addElement(LINECOLOR);
-        lineColor.addText(vertexTyp.getLineColor().name());
-        Element lineStyle = relativeVertex.addElement(LINESTYLE);
-        lineStyle.addText(vertexTyp.getLineStyle().name());
-        Element lineThick = relativeVertex.addElement(LINETHICKNESS);
-        lineThick.addText(vertexTyp.getLineThickness().name());
-        Element fillColor = relativeVertex.addElement(FILLCOLOR);
-        fillColor.addText(vertexTyp.getFillColor().name());
-        Element xPos = relativeVertex.addElement(XPOS);
-        xPos.addText(String.valueOf(pVertex.getX()));
-        Element yPos = relativeVertex.addElement(YPOS);
-        yPos.addText(String.valueOf(pVertex.getY()));
-      } else if (pVertex.getGVSVertexTyp()
-          .getClass() == GVSIconVertexTyp.class) {
-        logger.debug("Create DefaultVertex with ICON");
-        GVSIconVertexTyp vertexTyp = ((GVSIconVertexTyp) (pVertex
-            .getGVSVertexTyp()));
-        Element label = relativeVertex.addElement("Label");
-        String vertexLabel = pVertex.getGVSVertexLabel();
-        if (vertexLabel == null) {
-          vertexLabel = "";
-        }
-        label.addText(vertexLabel);
-        Element lineColor = relativeVertex.addElement(LINECOLOR);
-        lineColor.addText(vertexTyp.getLineColor().name());
-        Element lineStyle = relativeVertex.addElement(LINESTYLE);
-        lineStyle.addText(vertexTyp.getLineStyle().name());
-        Element lineThick = relativeVertex.addElement(LINETHICKNESS);
-        lineThick.addText(vertexTyp.getLineThickness().name());
-        Element icon = relativeVertex.addElement(ICON);
-        icon.addText(vertexTyp.getIcon().name());
-        Element xPos = relativeVertex.addElement(XPOS);
-        xPos.addText(String.valueOf(pVertex.getX()));
-        Element yPos = relativeVertex.addElement(YPOS);
-        yPos.addText(String.valueOf(pVertex.getY()));
-      } else {
-        logger.error("VertexTyp isnt a ELLIPSE or ICON");
-      }
-    } else {
-      Element label = relativeVertex.addElement(LABEL);
-      String vertexLabel = pVertex.getGVSVertexLabel();
-      if (vertexLabel == null) {
-        vertexLabel = "";
-      }
-      logger.info("No Typ. Standard will be set");
-      label.addText(vertexLabel);
-      Element lineColor = relativeVertex.addElement(LINECOLOR);
-      lineColor.addText(STANDARD);
-      Element lineStyle = relativeVertex.addElement(LINESTYLE);
-      lineStyle.addText(STANDARD);
-      Element lineThick = relativeVertex.addElement(LINETHICKNESS);
-      lineThick.addText(STANDARD);
-      Element fillColor = relativeVertex.addElement(FILLCOLOR);
-      fillColor.addText(STANDARD);
-      Element xPos = relativeVertex.addElement(XPOS);
-      xPos.addText(String.valueOf(pVertex.getX()));
-      Element yPos = relativeVertex.addElement(YPOS);
-      yPos.addText(String.valueOf(pVertex.getY()));
+
+    GVSStyle nodeStyle = pVertex.getStyle();
+    Element label = relativeVertex.addElement(LABEL);
+    String vertexLabel = pVertex.getGVSVertexLabel();
+    if (vertexLabel == null) {
+      vertexLabel = "";
     }
-    logger.debug("Finish create RealtivVertex-->XML");
+    label.addText(vertexLabel);
+    Element lineColor = relativeVertex.addElement(LINECOLOR);
+    lineColor.addText(nodeStyle.getLineColor().name());
+    Element lineStyle = relativeVertex.addElement(LINESTYLE);
+    lineStyle.addText(nodeStyle.getLineStyle().name());
+    Element lineThick = relativeVertex.addElement(LINETHICKNESS);
+    lineThick.addText(nodeStyle.getLineThickness().name());
+    Element fillColor = relativeVertex.addElement(FILLCOLOR);
+    fillColor.addText(nodeStyle.getFillColor().name());
+    Element xPos = relativeVertex.addElement(XPOS);
+    xPos.addText(String.valueOf(pVertex.getX()));
+    Element yPos = relativeVertex.addElement(YPOS);
+    yPos.addText(String.valueOf(pVertex.getY()));
+
+    if (nodeStyle.getIcon() != null) {
+      Element icon = relativeVertex.addElement(ICON);
+      icon.addText(nodeStyle.getIcon().name());
+    }
   }
 
   private void buildDirectedEdge(Element pParent, GVSDirectedEdge pEdge) {
@@ -750,51 +621,28 @@ public class GVSGraph {
     }
     if (vertex1Exist == true && vertex2Exist == true && vertex1 != null
         && vertex2 != null) {
-      GVSEdgeTyp edgeTyp = pEdge.getGVSEdgeTyp();
+
       Element directedEdge = pParent.addElement(EDGE);
       directedEdge.addAttribute(ATTRIBUTEID, String.valueOf(pEdge.hashCode()));
       directedEdge.addAttribute(ISDIRECTED, "true");
-      if (edgeTyp != null) {
-        Element label = directedEdge.addElement(LABEL);
-        String edgeLabel = pEdge.getGVSEdgeLabel();
-        if (edgeLabel == null) {
-          edgeLabel = "";
-        }
-        label.addText(edgeLabel);
-        Element lineColor = directedEdge.addElement(LINECOLOR);
-        lineColor.addText(edgeTyp.getLineColor().name());
-        Element lineStyle = directedEdge.addElement(LINESTYLE);
-        lineStyle.addText(edgeTyp.getLineStyle().name());
-        Element lineThick = directedEdge.addElement(LINETHICKNESS);
-        lineThick.addText(edgeTyp.getLineThickness().name());
-        Element fromVertex = directedEdge.addElement(FROMVERTEX);
-        fromVertex
-            .addText(String.valueOf(pEdge.getGVSStartVertex().hashCode()));
-        Element toVertex = directedEdge.addElement(TOVERTEX);
-        toVertex.addText(String.valueOf(pEdge.getGVSEndVertex().hashCode()));
-      } else {
-        Element label = directedEdge.addElement(LABEL);
-        String edgeLabel = pEdge.getGVSEdgeLabel();
-        if (edgeLabel == null) {
-          edgeLabel = "";
-        }
-        logger.debug("No Typ. Standard will be set");
-        label.addText(edgeLabel);
-        Element lineColor = directedEdge.addElement(LINECOLOR);
-        lineColor.addText(STANDARD);
-        Element lineStyle = directedEdge.addElement(LINESTYLE);
-        lineStyle.addText(STANDARD);
-        Element lineThick = directedEdge.addElement(LINETHICKNESS);
-        lineThick.addText(STANDARD);
-        Element fromVertex = directedEdge.addElement(FROMVERTEX);
-        fromVertex
-            .addText(String.valueOf(pEdge.getGVSStartVertex().hashCode()));
-        Element toVertex = directedEdge.addElement(TOVERTEX);
-        toVertex.addText(String.valueOf(pEdge.getGVSEndVertex().hashCode()));
+
+      GVSStyle style = pEdge.getStyle();
+      Element label = directedEdge.addElement(LABEL);
+      String edgeLabel = pEdge.getGVSEdgeLabel();
+      if (edgeLabel == null) {
+        edgeLabel = "";
       }
-      logger.debug("Finish create DirectedEdge-->XML");
-    } else {
-      logger.warn("Start- or endvertex isn't in the Collection or null.");
+      label.addText(edgeLabel);
+      Element lineColor = directedEdge.addElement(LINECOLOR);
+      lineColor.addText(style.getLineColor().name());
+      Element lineStyle = directedEdge.addElement(LINESTYLE);
+      lineStyle.addText(style.getLineStyle().name());
+      Element lineThick = directedEdge.addElement(LINETHICKNESS);
+      lineThick.addText(style.getLineThickness().name());
+      Element fromVertex = directedEdge.addElement(FROMVERTEX);
+      fromVertex.addText(String.valueOf(pEdge.getGVSStartVertex().hashCode()));
+      Element toVertex = directedEdge.addElement(TOVERTEX);
+      toVertex.addText(String.valueOf(pEdge.getGVSEndVertex().hashCode()));
     }
   }
 
@@ -817,7 +665,6 @@ public class GVSGraph {
     }
     if (vertex1Exist == true && vertex2Exist == true && vertex1 != null
         && vertex2 != null) {
-      GVSEdgeTyp edgeTyp = pEdge.getGVSEdgeTyp();
       Element undirectedEdge = pParent.addElement(EDGE);
       undirectedEdge.addAttribute(ATTRIBUTEID,
           String.valueOf(pEdge.hashCode()));
@@ -825,48 +672,24 @@ public class GVSGraph {
       undirectedEdge.addAttribute(ISDIRECTED, "false");
       undirectedEdge.addAttribute(ARROWPOS, String.valueOf(arrowPos));
 
-      if (edgeTyp != null) {
-        Element label = undirectedEdge.addElement(LABEL);
-        String edgeLabel = pEdge.getGVSEdgeLabel();
-        if (edgeLabel == null) {
-          edgeLabel = "";
-        }
-        label.addText(edgeLabel);
-        Element lineColor = undirectedEdge.addElement(LINECOLOR);
-        lineColor.addText(edgeTyp.getLineColor().name());
-        Element lineStyle = undirectedEdge.addElement(LINESTYLE);
-        lineStyle.addText(edgeTyp.getLineStyle().name());
-        Element lineThick = undirectedEdge.addElement(LINETHICKNESS);
-        lineThick.addText(edgeTyp.getLineThickness().name());
-
-        Element fromVertex = undirectedEdge.addElement(FROMVERTEX);
-        fromVertex
-            .addText(String.valueOf(pEdge.getGVSVertizes()[0].hashCode()));
-        Element toVertex = undirectedEdge.addElement(TOVERTEX);
-        toVertex.addText(String.valueOf(pEdge.getGVSVertizes()[1].hashCode()));
-      } else {
-        Element label = undirectedEdge.addElement(LABEL);
-        String edgeLabel = pEdge.getGVSEdgeLabel();
-        if (edgeLabel == null) {
-          edgeLabel = "";
-        }
-        logger.debug("No Typ. Standard will be set");
-        label.addText(edgeLabel);
-        Element lineColor = undirectedEdge.addElement(LINECOLOR);
-        lineColor.addText(STANDARD);
-        Element lineStyle = undirectedEdge.addElement(LINESTYLE);
-        lineStyle.addText(STANDARD);
-        Element lineThick = undirectedEdge.addElement(LINETHICKNESS);
-        lineThick.addText(STANDARD);
-        Element fromVertex = undirectedEdge.addElement(FROMVERTEX);
-        fromVertex
-            .addText(String.valueOf(pEdge.getGVSVertizes()[0].hashCode()));
-        Element toVertex = undirectedEdge.addElement(TOVERTEX);
-        toVertex.addText(String.valueOf(pEdge.getGVSVertizes()[1].hashCode()));
+      GVSStyle nodeStyle = pEdge.getStyle();
+      Element label = undirectedEdge.addElement(LABEL);
+      String edgeLabel = pEdge.getGVSEdgeLabel();
+      if (edgeLabel == null) {
+        edgeLabel = "";
       }
-      logger.debug("Finish create UnirectedEdge-->XML");
-    } else {
-      logger.warn("Start- or endvertex isn't in the Collection or null.");
+      label.addText(edgeLabel);
+      Element lineColor = undirectedEdge.addElement(LINECOLOR);
+      lineColor.addText(nodeStyle.getLineColor().name());
+      Element lineStyle = undirectedEdge.addElement(LINESTYLE);
+      lineStyle.addText(nodeStyle.getLineStyle().name());
+      Element lineThick = undirectedEdge.addElement(LINETHICKNESS);
+      lineThick.addText(nodeStyle.getLineThickness().name());
+
+      Element fromVertex = undirectedEdge.addElement(FROMVERTEX);
+      fromVertex.addText(String.valueOf(pEdge.getGVSVertizes()[0].hashCode()));
+      Element toVertex = undirectedEdge.addElement(TOVERTEX);
+      toVertex.addText(String.valueOf(pEdge.getGVSVertizes()[1].hashCode()));
     }
   }
 }

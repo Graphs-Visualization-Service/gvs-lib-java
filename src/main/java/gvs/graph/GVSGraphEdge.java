@@ -1,7 +1,7 @@
 
 package gvs.graph;
 
-import gvs.typ.edge.GVSEdgeTyp;
+import gvs.styles.GVSStyle;
 
 /**
  * 
@@ -24,6 +24,6 @@ public interface GVSGraphEdge {
    * 
    * @return the edgetyp. If it is null the default typ will be set
    */
-  public abstract GVSEdgeTyp getGVSEdgeTyp();
+  public abstract GVSStyle getStyle();
 
 }

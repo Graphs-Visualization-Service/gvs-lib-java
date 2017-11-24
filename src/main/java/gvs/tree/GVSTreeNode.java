@@ -1,7 +1,7 @@
 
 package gvs.tree;
 
-import gvs.typ.node.GVSNodeTyp;
+import gvs.styles.GVSStyle;
 
 /**
  * 
@@ -20,5 +20,5 @@ abstract interface GVSTreeNode {
 	 * Returns the typ of the node
 	 * @return nodeTyp. If it is null the default typ will be set
 	 */
-	public GVSNodeTyp getNodeTyp();
+	public GVSStyle getStyle();
 }

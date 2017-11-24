@@ -1,4 +1,4 @@
-package gvs.typ.styles;
+package gvs.styles;
 
 public enum GVSLineThickness {
 
