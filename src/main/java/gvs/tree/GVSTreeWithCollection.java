@@ -48,6 +48,7 @@ public class GVSTreeWithCollection {
   private final String GVSPORTFILE = "GVSPortFile";
   private final String GVSHOST = "GVSHost";
   private final String GVSPORT = "GVSPort";
+  private final String NO_GVS = "NoGVS";
 
   // Generaly
   private final String ROOT = "GVS";
@@ -73,6 +74,10 @@ public class GVSTreeWithCollection {
   private static final Logger logger = LoggerFactory
       .getLogger(GVSTreeWithCollection.class);
 
+  // If Connection to Server shall be used:
+  private boolean connectToServer = false;
+  private boolean connected = false;
+
   /**
    * Init the tree and the connection
    * 
@@ -90,6 +95,7 @@ public class GVSTreeWithCollection {
     String propPortfile = System.getProperty(GVSPORTFILE);
     String propHost = System.getProperty(GVSHOST);
     String propPort = System.getProperty(GVSPORT);
+    connectToServer = System.getProperty(NO_GVS) != null ? false : true;
 
     // Set Portfilepath from VM
     if (propPortfile != null) {
@@ -136,7 +142,15 @@ public class GVSTreeWithCollection {
       logger.info("Host: " + host + " Port: " + port);
     }
     xmlConnection = new XMLConnection(host, port);
-    xmlConnection.connectToServer();
+    if (connectToServer) {
+      String result = xmlConnection.connectToServer();
+      if (!result.equals("")) {
+        connected = true;
+      }
+    } else {
+      logger.warn("Connection to Server is disabled by Property \"-DNoGVS\"!");
+    }
+
   }
 
   /**
@@ -345,8 +359,10 @@ public class GVSTreeWithCollection {
      * e.printStackTrace(); } catch (IOException e) { e.printStackTrace(); }
      */
     logger.info("Finish building XML...");
-    logger.info("Call send");
-    xmlConnection.sendFile(document);
+    if (connectToServer) {
+      logger.info("Call send");
+      xmlConnection.sendFile(document);
+    }
   }
 
   /**
@@ -354,8 +370,10 @@ public class GVSTreeWithCollection {
    *
    */
   public void disconnect() {
-    logger.info("Call disconnect");
-    xmlConnection.disconnectFromServer();
+    if (connectToServer) {
+      logger.info("Call disconnect");
+      xmlConnection.disconnectFromServer();
+    }
   }
 
   protected void finalize() throws Throwable {
@@ -488,4 +506,7 @@ public class GVSTreeWithCollection {
 
   }
 
+  public boolean isConnected() {
+    return connected;
+  }
 }

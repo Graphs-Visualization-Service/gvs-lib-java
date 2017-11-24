@@ -17,6 +17,26 @@ public class GVSStyle {
   }
 
   public GVSStyle(GVSColor lineColor, GVSLineStyle lineStyle,
+      GVSLineThickness lineThickness) {
+    this.lineColor = lineColor;
+    this.lineStyle = lineStyle;
+    this.lineThickness = lineThickness;
+
+    this.fillColor = GVSColor.STANDARD;
+    this.icon = null;
+  }
+
+  public GVSStyle(GVSColor lineColor, GVSLineStyle lineStyle,
+      GVSLineThickness lineThickness, GVSColor fillColor) {
+    this.lineColor = lineColor;
+    this.lineStyle = lineStyle;
+    this.lineThickness = lineThickness;
+    this.fillColor = fillColor;
+
+    this.icon = null;
+  }
+
+  public GVSStyle(GVSColor lineColor, GVSLineStyle lineStyle,
       GVSLineThickness lineThickness, GVSColor fillColor, GVSIcon icon) {
 
     if (lineColor != null) {
@@ -46,6 +66,8 @@ public class GVSStyle {
     this.icon = icon;
   }
 
+  
+  
   public GVSColor getFillColor() {
     return fillColor;
   }
