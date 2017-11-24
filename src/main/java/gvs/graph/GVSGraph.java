@@ -547,6 +547,10 @@ public class GVSGraph {
     defaultVertex.addAttribute(ATTRIBUTEID, String.valueOf(pVertex.hashCode()));
 
     GVSStyle nodeStyle = pVertex.getStyle();
+    if (nodeStyle == null) {
+      nodeStyle = new GVSStyle();
+    }
+
     Element label = defaultVertex.addElement(LABEL);
     String vertexLabel = pVertex.getGVSVertexLabel();
     if (vertexLabel == null) {
@@ -577,6 +581,10 @@ public class GVSGraph {
         String.valueOf(pVertex.hashCode()));
 
     GVSStyle nodeStyle = pVertex.getStyle();
+    if (nodeStyle == null) {
+      nodeStyle = new GVSStyle();
+    }
+
     Element label = relativeVertex.addElement(LABEL);
     String vertexLabel = pVertex.getGVSVertexLabel();
     if (vertexLabel == null) {
@@ -627,6 +635,10 @@ public class GVSGraph {
       directedEdge.addAttribute(ISDIRECTED, "true");
 
       GVSStyle style = pEdge.getStyle();
+      if (style == null) {
+        style = new GVSStyle();
+      }
+
       Element label = directedEdge.addElement(LABEL);
       String edgeLabel = pEdge.getGVSEdgeLabel();
       if (edgeLabel == null) {
@@ -673,6 +685,9 @@ public class GVSGraph {
       undirectedEdge.addAttribute(ARROWPOS, String.valueOf(arrowPos));
 
       GVSStyle nodeStyle = pEdge.getStyle();
+      if (nodeStyle == null) {
+        nodeStyle = new GVSStyle();
+      }
       Element label = undirectedEdge.addElement(LABEL);
       String edgeLabel = pEdge.getGVSEdgeLabel();
       if (edgeLabel == null) {
