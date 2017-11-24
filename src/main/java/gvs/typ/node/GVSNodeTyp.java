@@ -1,23 +1,22 @@
 
 package gvs.typ.node;
 
-import gvs.typ.GVSDefaultTyp.LineColor;
-import gvs.typ.GVSDefaultTyp.LineStyle;
-import gvs.typ.GVSDefaultTyp.LineThickness;
+import gvs.typ.styles.GVSColor;
+import gvs.typ.styles.GVSLineStyle;
+import gvs.typ.styles.GVSLineThickness;
 import gvs.typ.vertex.GVSEllipseVertexTyp;
 
 /**
  * 
- * @author mkoller
- *
- *         Represents a node which will be drawn as a Ellipse.
- *         Linethickness,linecolor,linestyle and fillcolor can be set.
+ * Represents a node which will be drawn as a Ellipse.
+ * Linethickness,linecolor,linestyle and fillcolor can be set.
  * 
+ * @author mkoller
  */
 public class GVSNodeTyp extends GVSEllipseVertexTyp {
 
-  public GVSNodeTyp(LineColor pLineColor, LineStyle pLineStyle,
-      LineThickness pLineThickness, FillColor pFillColor) {
+  public GVSNodeTyp(GVSColor pLineColor, GVSLineStyle pLineStyle,
+      GVSLineThickness pLineThickness, GVSColor pFillColor) {
     super(pLineColor, pLineStyle, pLineThickness, pFillColor);
   }
 

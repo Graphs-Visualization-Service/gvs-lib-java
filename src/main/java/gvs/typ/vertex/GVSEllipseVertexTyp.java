@@ -1,32 +1,27 @@
 
 package gvs.typ.vertex;
 
-import gvs.typ.GVSDefaultTyp;
-import gvs.typ.GVSDefaultTyp.LineColor;
-import gvs.typ.GVSDefaultTyp.LineStyle;
-import gvs.typ.GVSDefaultTyp.LineThickness;
+import gvs.typ.styles.GVSColor;
+import gvs.typ.styles.GVSLineStyle;
+import gvs.typ.styles.GVSLineThickness;
 
 /**
  * 
+ * Represents a vertex which will be drawn as a Ellipse.
+ * Linethickness,linecolor,linestyle and fillcolor can be set.
+ * 
  * @author mkoller
- * 
- *         Represents a vertex which will be drawn as a Ellipse.
- *         Linethickness,linecolor,linestyle and fillcolor can be set.
- * 
  */
 public class GVSEllipseVertexTyp extends GVSVertexTyp {
 
-  public enum FillColor {
-    standard, gray, ligthGray, red, ligthRed, blue, darkBlue, ligthBlue, green, ligthGreen, darkGreen, turqoise, yellow, brown, orange, pink, violet
-  }
+  private final GVSColor lineColor;
+  private final GVSLineStyle lineStyle;
+  private final GVSLineThickness lineThickness;
+  private final GVSColor fillColor;
 
-  private LineColor lineColor = null;
-  private LineStyle lineStyle = null;
-  private LineThickness lineThickness = null;
-  private FillColor fillColor = null;
+  public GVSEllipseVertexTyp(GVSColor pLineColor, GVSLineStyle pLineStyle,
+      GVSLineThickness pLineThickness, GVSColor pFillColor) {
 
-  public GVSEllipseVertexTyp(LineColor pLineColor, LineStyle pLineStyle,
-      LineThickness pLineThickness, FillColor pFillColor) {
     this.lineColor = pLineColor;
     this.lineStyle = pLineStyle;
     this.lineThickness = pLineThickness;
@@ -38,7 +33,7 @@ public class GVSEllipseVertexTyp extends GVSVertexTyp {
    * 
    * @return linecolor
    */
-  public GVSDefaultTyp.LineColor getLineColor() {
+  public GVSColor getLineColor() {
     return lineColor;
   }
 
@@ -47,7 +42,7 @@ public class GVSEllipseVertexTyp extends GVSVertexTyp {
    * 
    * @return linestyle
    */
-  public GVSDefaultTyp.LineStyle getLineStyle() {
+  public GVSLineStyle getLineStyle() {
     return lineStyle;
   }
 
@@ -56,7 +51,7 @@ public class GVSEllipseVertexTyp extends GVSVertexTyp {
    * 
    * @return linethickness
    */
-  public GVSDefaultTyp.LineThickness getLineThickness() {
+  public GVSLineThickness getLineThickness() {
     return lineThickness;
   }
 
@@ -65,8 +60,7 @@ public class GVSEllipseVertexTyp extends GVSVertexTyp {
    * 
    * @return fillcolor
    */
-  public FillColor getFillColor() {
+  public GVSColor getFillColor() {
     return fillColor;
   }
-
 }

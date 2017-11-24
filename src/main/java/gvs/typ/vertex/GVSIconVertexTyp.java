@@ -1,31 +1,28 @@
 
 package gvs.typ.vertex;
 
-import gvs.typ.GVSDefaultTyp;
-import gvs.typ.GVSDefaultTyp.LineColor;
-import gvs.typ.GVSDefaultTyp.LineStyle;
-import gvs.typ.GVSDefaultTyp.LineThickness;
+import gvs.typ.styles.GVSColor;
+import gvs.typ.styles.GVSIcon;
+import gvs.typ.styles.GVSLineStyle;
+import gvs.typ.styles.GVSLineThickness;
 
 /**
  * 
- * @author mkoller
+ * Represents a vertex which will be drawn with a image.
+ * Linethickness,linecolor,linestyle and icon can be set.
  * 
- *         Represents a vertex which will be drawn with a image.
- *         Linethickness,linecolor,linestyle and icon can be set.*
+ * @author mkoller
  */
 public class GVSIconVertexTyp extends GVSVertexTyp {
 
-  public enum Icon {
-    COG, PLAY, GLOBE, BELL
-  }
+  private final GVSColor lineColor;
+  private final GVSLineStyle lineStyle;
+  private final GVSLineThickness lineThickness;
+  private final GVSIcon icon;
 
-  private LineColor lineColor = null;
-  private LineStyle lineStyle = null;
-  private LineThickness lineThickness = null;
-  private Icon icon = null;
+  public GVSIconVertexTyp(GVSColor pLineColor, GVSLineStyle pLineStyle,
+      GVSLineThickness pLineThickness, GVSIcon pIcon) {
 
-  public GVSIconVertexTyp(LineColor pLineColor, LineStyle pLineStyle,
-      LineThickness pLineThickness, Icon pIcon) {
     this.lineColor = pLineColor;
     this.lineStyle = pLineStyle;
     this.lineThickness = pLineThickness;
@@ -37,7 +34,7 @@ public class GVSIconVertexTyp extends GVSVertexTyp {
    * 
    * @return linecolor
    */
-  public GVSDefaultTyp.LineColor getLineColor() {
+  public GVSColor getLineColor() {
     return lineColor;
   }
 
@@ -46,7 +43,7 @@ public class GVSIconVertexTyp extends GVSVertexTyp {
    * 
    * @return linestyle
    */
-  public GVSDefaultTyp.LineStyle getLineStyle() {
+  public GVSLineStyle getLineStyle() {
     return lineStyle;
   }
 
@@ -55,7 +52,7 @@ public class GVSIconVertexTyp extends GVSVertexTyp {
    * 
    * @return linethickness
    */
-  public GVSDefaultTyp.LineThickness getLineThickness() {
+  public GVSLineThickness getLineThickness() {
     return lineThickness;
   }
 
@@ -64,7 +61,7 @@ public class GVSIconVertexTyp extends GVSVertexTyp {
    * 
    * @return icon
    */
-  public Icon getIcon() {
+  public GVSIcon getIcon() {
     return icon;
   }
 
