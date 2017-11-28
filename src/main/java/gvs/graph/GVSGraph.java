@@ -4,6 +4,7 @@ package gvs.graph;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 import org.dom4j.Document;
@@ -67,8 +68,8 @@ public class GVSGraph {
   private final String ARROWPOS = "DrawArrowOnPosition";
 
   // Values to send
-  private HashSet<GVSDefaultVertex> gvsGraphVertizes = null;
-  private HashSet<GVSGraphEdge> gvsGraphEdges = null;
+  private Set<GVSDefaultVertex> gvsGraphVertizes = null;
+  private Set<GVSGraphEdge> gvsGraphEdges = null;
 
   private static final Logger logger = LoggerFactory.getLogger(GVSGraph.class);
 
