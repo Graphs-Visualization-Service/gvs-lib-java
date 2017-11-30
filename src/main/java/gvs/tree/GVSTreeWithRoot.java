@@ -16,22 +16,22 @@ import gvs.connection.XMLConnection;
 import gvs.styles.GVSStyle;
 
 /**
- * This class takes up only a rootnode. For transfer, the class build the tree
- * recursivly and add the nodes to a collection. Null values are translated on
- * standard or empty strings It is to be made certain that the tree does not
- * contain cycles. The connectioninformation have to be set over Properties:
+ * This class takes up only a rootnode. For transfer, the class builds the tree
+ * recursivly and adds the nodes to a collection. Null values are translated to
+ * standard or empty strings. It is to be made certain that the tree does not
+ * contain cycles. The connection information has to be set over Properties:
  * 
  * -DGVSPortFile or -DGVSHost and -DGVSPort are supported.
  * 
- * Actually only BinaryTrees are supported, because the layout algorithm are
- * missing.
+ * Currently only BinaryTrees are supported, because there is no layout
+ * algorithm for general trees
  * 
  * @author mkoller
  * 
  */
 public class GVSTreeWithRoot {
 
-  // Datas
+  // Data
   private Document document = null;
   private XMLConnection xmlConnection = null;
   private String host = null;
@@ -46,7 +46,7 @@ public class GVSTreeWithRoot {
   private final String GVSPORT = "GVSPort";
   private final String NO_GVS = "NoGVS";
 
-  // Allgemeine
+  // General
   private final String ROOT = "GVS";
   private final String ATTRIBUTEID = "Id";
   private final String LABEL = "Label";
@@ -141,8 +141,7 @@ public class GVSTreeWithRoot {
         connected = true;
       }
     } else {
-      logger
-          .warn("Connection to Server is disabled by Property \"-DNoGVS\"!");
+      logger.warn("Connection to Server is disabled by Property \"-DNoGVS\"!");
     }
 
   }
@@ -178,16 +177,15 @@ public class GVSTreeWithRoot {
       logger.debug("build Node-Elements");
       Element treeRoot = tree.addElement(TREEROOTID);
       treeRoot.addText(String.valueOf(this.gvsTreeRoot.hashCode()));
+    }
+    Element nodes = docRoot.addElement(NODES);
 
-      Element nodes = docRoot.addElement(NODES);
-
-      this.gvsTreeNodes = new Vector<GVSTreeNode>();
+    this.gvsTreeNodes = new Vector<GVSTreeNode>();
+    if (this.gvsTreeRoot != null) {
       buildNode(nodes, this.gvsTreeRoot);
       if (checkForCycles()) {
         System.exit(0);
       }
-    } else {
-      logger.error("No Root Node is set");
     }
     logger.info("Finish building XML");
     if (connectToServer) {
