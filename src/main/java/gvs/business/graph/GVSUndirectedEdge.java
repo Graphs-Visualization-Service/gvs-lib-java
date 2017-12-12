@@ -1,5 +1,5 @@
 
-package gvs.graph;
+package gvs.business.graph;
 
 /**
  * 

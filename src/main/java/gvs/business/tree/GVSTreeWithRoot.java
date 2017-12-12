@@ -1,5 +1,5 @@
 
-package gvs.tree;
+package gvs.business.tree;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -12,8 +12,8 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gvs.connection.XMLConnection;
-import gvs.styles.GVSStyle;
+import gvs.access.XMLConnection;
+import gvs.business.styles.GVSStyle;
 
 /**
  * This class takes up only a rootnode. For transfer, the class builds the tree

@@ -1,4 +1,4 @@
-package gvs.styles;
+package gvs.business.styles;
 
 public enum GVSLineStyle {
 

@@ -1,5 +1,5 @@
 
-package gvs.tree;
+package gvs.business.tree;
 
 public interface GVSBinaryTreeNode extends GVSTreeNode {
 

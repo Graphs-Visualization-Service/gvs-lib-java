@@ -1,5 +1,5 @@
 
-package gvs.graph;
+package gvs.business.graph;
 
 /**
  * Represents a DirectedEdge. Start and end must be set. The Arrow will be drawn

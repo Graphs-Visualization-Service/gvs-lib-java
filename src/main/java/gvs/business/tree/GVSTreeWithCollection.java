@@ -1,5 +1,5 @@
 
-package gvs.tree;
+package gvs.business.tree;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,8 +14,8 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gvs.connection.XMLConnection;
-import gvs.styles.GVSStyle;
+import gvs.access.XMLConnection;
+import gvs.business.styles.GVSStyle;
 
 /**
  * 

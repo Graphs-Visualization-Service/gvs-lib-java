@@ -1,6 +1,6 @@
-package gvs.graph;
+package gvs.business.graph;
 
-import gvs.styles.GVSStyle;
+import gvs.business.styles.GVSStyle;
 
 /**
  * This interface is needed for the realization of a DefaultVertex

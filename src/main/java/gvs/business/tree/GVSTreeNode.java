@@ -1,7 +1,7 @@
 
-package gvs.tree;
+package gvs.business.tree;
 
-import gvs.styles.GVSStyle;
+import gvs.business.styles.GVSStyle;
 
 /**
  * 

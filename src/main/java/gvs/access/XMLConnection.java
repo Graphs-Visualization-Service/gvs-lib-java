@@ -1,5 +1,5 @@
 
-package gvs.connection;
+package gvs.access;
 
 import java.io.BufferedReader;
 import java.io.IOException;

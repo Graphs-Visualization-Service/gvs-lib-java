@@ -1,5 +1,5 @@
 
-package gvs.graph;
+package gvs.business.graph;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,8 +15,8 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gvs.connection.XMLConnection;
-import gvs.styles.GVSStyle;
+import gvs.access.XMLConnection;
+import gvs.business.styles.GVSStyle;
 
 /**
  * This class represents the graph. Null values are translated on standard or
