@@ -151,6 +151,7 @@ public class GVSGraph {
    * @param pGVSVertex
    */
   public void add(GVSDefaultVertex pGVSVertex) {
+    checkForMixedGraph(pGVSVertex);
     this.gvsGraphVertizes.add(pGVSVertex);
     logger.debug("DefaultVertex added");
   }
@@ -161,6 +162,7 @@ public class GVSGraph {
    * @param pGVSVertex
    */
   public void add(GVSRelativeVertex pGVSVertex) {
+    checkForMixedGraph(pGVSVertex);
     this.gvsGraphVertizes.add(pGVSVertex);
     logger.debug("RelativVertex added");
   }
@@ -242,7 +244,9 @@ public class GVSGraph {
    */
   public void add(GVSDefaultVertex[] pGVSVertex) {
     for (int count = 0; count < pGVSVertex.length; count++) {
-      this.gvsGraphVertizes.add(pGVSVertex[count]);
+      GVSDefaultVertex vertex = pGVSVertex[count];
+      checkForMixedGraph(vertex);
+      this.gvsGraphVertizes.add(vertex);
     }
     logger.debug("DefaultVertex[] added");
   }
@@ -254,7 +258,9 @@ public class GVSGraph {
    */
   public void add(GVSRelativeVertex[] pGVSVertex) {
     for (int count = 0; count < pGVSVertex.length; count++) {
-      this.gvsGraphVertizes.add(pGVSVertex[count]);
+      GVSRelativeVertex vertex = pGVSVertex[count];
+      checkForMixedGraph(vertex);
+      this.gvsGraphVertizes.add(vertex);
     }
     logger.debug("RealtivVertex[] added");
   }
@@ -706,6 +712,36 @@ public class GVSGraph {
       fromVertex.addText(String.valueOf(pEdge.getGVSVertizes()[0].hashCode()));
       Element toVertex = undirectedEdge.addElement(TOVERTEX);
       toVertex.addText(String.valueOf(pEdge.getGVSVertizes()[1].hashCode()));
+    }
+  }
+
+  /**
+   * Check wheter the graph is mixed, i.e. contains default and relative
+   * vertices.
+   * 
+   * @param pGVSVertex
+   *          the vertex to be added
+   */
+  private void checkForMixedGraph(GVSDefaultVertex pGVSVertex) {
+    if (gvsGraphVertizes.isEmpty()) {
+      return;
+    }
+    if (pGVSVertex instanceof GVSRelativeVertex) {
+      // new vertex is GVSRelativeVertex.
+      // if **not all** other vertices are GVSRelativeVertex, graph is mixed
+      if (!gvsGraphVertizes.stream()
+          .allMatch(GVSRelativeVertex.class::isInstance)) {
+        throw new IllegalArgumentException(
+            "Cannot mix default and relative vertices in a graph");
+      }
+    } else {
+      // new vertex is GVSDefaultVertex
+      // if **any** other vertex is GVSRelativeVertex, graph is mixed
+      if (gvsGraphVertizes.stream()
+          .anyMatch(GVSRelativeVertex.class::isInstance)) {
+        throw new IllegalArgumentException(
+            "Cannot mix default and relative vertices in a graph");
+      }
     }
   }
 }
