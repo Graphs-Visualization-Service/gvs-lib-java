@@ -9,7 +9,6 @@ public interface GVSBinaryTreeNode extends GVSTreeNode {
    * @return TreeNode
    */
   public GVSBinaryTreeNode getGVSLeftChild();
-  
 
   /**
    * Returns the right child from the Treenode

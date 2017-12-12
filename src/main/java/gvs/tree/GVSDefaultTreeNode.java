@@ -3,14 +3,14 @@ package gvs.tree;
 
 /**
  * 
- * @author mkoller
- *	Represents a DefaultTreeNode.
+ * @author mkoller Represents a DefaultTreeNode.
  */
-public interface GVSDefaultTreeNode extends GVSTreeNode{
+public interface GVSDefaultTreeNode extends GVSTreeNode {
 
-	/**
-	 * Returns all childnodes
-	 * @return childnodes
-	 */
-	public GVSDefaultTreeNode[] getGVSChildNodes();
+  /**
+   * Returns all childnodes
+   * 
+   * @return childnodes
+   */
+  public GVSDefaultTreeNode[] getGVSChildNodes();
 }
