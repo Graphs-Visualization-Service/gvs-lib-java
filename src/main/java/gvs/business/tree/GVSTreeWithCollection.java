@@ -477,10 +477,10 @@ public class GVSTreeWithCollection {
       Iterator<GVSTreeNode> checkToOrigIt = gvsTreeNodes.iterator();
       while (checkToOrigIt.hasNext()) {
         GVSTreeNode nodeToCheck = checkToOrigIt.next();
-        GVSTreeNode[] children = nodeToCheck.children();
+        GVSTreeNode[] children = children(nodeToCheck);
         if (children != null) {
           for (int i = 0; i < children.length; i++) {
-            if (nodeToCheck.children()[i] == actualNode) {
+            if (children[i] == actualNode) {
               counter++;
             }
           }
@@ -493,6 +493,16 @@ public class GVSTreeWithCollection {
       }
     }
     return hasCycle;
+  }
+
+  private GVSTreeNode[] children(GVSTreeNode nodeToCheck) {
+    if (nodeToCheck instanceof GVSBinaryTreeNode) {
+      GVSBinaryTreeNode node = (GVSBinaryTreeNode) nodeToCheck;
+      return new GVSTreeNode[] {node.getGVSLeftChild(),node.getGVSRightChild()};
+    } else {
+      GVSDefaultTreeNode node = (GVSDefaultTreeNode) nodeToCheck;
+      return node.getGVSChildNodes();
+    }
   }
 
   public boolean isConnected() {

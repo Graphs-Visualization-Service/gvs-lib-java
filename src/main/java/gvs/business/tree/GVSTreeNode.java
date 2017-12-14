@@ -1,7 +1,6 @@
 
 package gvs.business.tree;
 
-import java.util.Collection;
 
 import gvs.business.styles.GVSStyle;
 
@@ -24,11 +23,4 @@ public abstract interface GVSTreeNode {
    * @return nodeTyp. If it is null the default typ will be set
    */
   public GVSStyle getStyle();
-  
-  /**
-   * Returns all the children of the node
-   * 
-   * @return children
-   */
-  public GVSTreeNode[] children();
 }
