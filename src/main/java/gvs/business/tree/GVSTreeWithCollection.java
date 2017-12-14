@@ -27,8 +27,6 @@ import gvs.business.styles.GVSStyle;
  * 
  * -DGVSPortFile or -DGVSHost and -DGVSPort are supported.
  * 
- * Actually only BinaryTrees are supported, because the layout algorithm are
- * missing
  * 
  * @author mkoller
  */
@@ -62,9 +60,9 @@ public class GVSTreeWithCollection {
   // Tree
   private final String TREE = "Tree";
   private final String NODES = "Nodes";
-  // private final String DEFAULTNODE="DefaultNode";
+  private final String DEFAULTNODE = "DefaultNode";
   private final String BINARYNODE = "BinaryNode";
-  // private final String CHILDID="Childid";
+  private final String CHILD = "Child";
   private final String RIGHT_CHILD = "Rigthchild";
   private final String LEFT_CHILD = "Leftchild";
 
@@ -301,7 +299,6 @@ public class GVSTreeWithCollection {
       System.exit(0);
     }
     logger.info("Start building XML...");
-    // output = new File("test.xml");
     document = DocumentHelper.createDocument();
     Element docRoot = document.addElement(ROOT);
 
@@ -327,22 +324,19 @@ public class GVSTreeWithCollection {
             logger.warn("BinaryNode null");
           }
           break;
+        } else if (interfaces[count] == GVSDefaultTreeNode.class) {
+          GVSDefaultTreeNode node = (GVSDefaultTreeNode) tmp;
+          if (node != null) {
+            buildDefaultNode(nodes, node);
+          } else {
+            System.err.println("Node null");
+          }
+          break;
         }
-        /*
-         * else if(interfaces[count]==GVSDefaultTreeNode.class){
-         * GVSDefaultTreeNode node=(GVSDefaultTreeNode)tmp; if(node!=null){
-         * buildDefaultNode(nodes,node); } else{
-         * System.err.println("Node null"); } break; }
-         */
+
       }
     }
 
-    /*
-     * OutputFormat format = OutputFormat.createPrettyPrint(); try { XMLWriter
-     * writer = new XMLWriter( new FileOutputStream(output), format );
-     * writer.write( document ); } catch (UnsupportedEncodingException e) {
-     * e.printStackTrace(); } catch (IOException e) { e.printStackTrace(); }
-     */
     logger.info("Finish building XML...");
     if (connectToServer) {
       logger.info("Call send");
@@ -369,40 +363,48 @@ public class GVSTreeWithCollection {
 
   // ****************************XML-BUILDER*********************************
 
-  /*
-   * private void buildDefaultNode(Element pParent, GVSDefaultTreeNode pNode){
-   * logger.info("Create DefaultNode -->XML"); Element defaultNode =
-   * pParent.addElement(DEFAULTNODE);
-   * defaultNode.addAttribute(ATTRIBUTEID,String.valueOf(pNode.hashCode()));
-   * GVSNodeTyp nodeTyp =pNode.getNodeTyp(); Element label =
-   * defaultNode.addElement(LABEL); String theLabel=pNode.getNodeLabel();
-   * 
-   * Element lineColor = defaultNode.addElement(LINECOLOR); Element lineStyle =
-   * defaultNode.addElement(LINESTYLE);
-   * 
-   * Element lineThick = defaultNode.addElement(LINETHICKNESS); Element
-   * fillColor = defaultNode.addElement(FILLCOLOR);
-   * 
-   * if(theLabel==null){ theLabel=""; } label.addText(theLabel);
-   * 
-   * GVSNodeTyp nodeTypNull=pNode.getNodeTyp(); if(nodeTypNull!=null){
-   * 
-   * lineColor.addText(nodeTyp.getLineColor().name());
-   * lineStyle.addText(nodeTyp.getLineStyle().name());
-   * lineThick.addText(nodeTyp.getLineThickness().name());
-   * fillColor.addText(nodeTyp.getFillColor().name()); } else{
-   * lineColor.addText(STANDARD); lineStyle.addText(STANDARD);
-   * lineThick.addText(STANDARD); fillColor.addText(STANDARD); }
-   * GVSDefaultTreeNode childs[]=pNode.getChildNodes(); if(childs!=null){
-   * for(int size=0;size<childs.length;size++){
-   * if(gvsTreeNodes.contains(childs[size])&& childs[size]!=null){ Element child
-   * = defaultNode.addElement(CHILDID);
-   * child.addText(String.valueOf(childs[size].hashCode()));
-   * logger.info("child found"); } else{ logger.warn("Child "+
-   * childs[size].getNodeLabel()+" " +
-   * "nicht in der Collection vorhanden oder null"); } } }
-   * logger.info("Finish Create DefaultNode -->XML"); }
-   */
+  private void buildDefaultNode(Element pParent, GVSDefaultTreeNode pNode) {
+    Element defaultNode = pParent.addElement(DEFAULTNODE);
+    defaultNode.addAttribute(ATTRIBUTEID, String.valueOf(pNode.hashCode()));
+    GVSStyle style = pNode.getStyle();
+
+    Element label = defaultNode.addElement(LABEL);
+    String theLabel = pNode.getNodeLabel();
+
+    Element lineColor = defaultNode.addElement(LINECOLOR);
+    Element lineStyle = defaultNode.addElement(LINESTYLE);
+
+    Element lineThick = defaultNode.addElement(LINETHICKNESS);
+    Element fillColor = defaultNode.addElement(FILLCOLOR);
+
+    if (theLabel == null) {
+      theLabel = "";
+    }
+    label.addText(theLabel);
+
+    if (style != null) {
+
+      lineColor.addText(style.getLineColor().name());
+      lineStyle.addText(style.getLineStyle().name());
+      lineThick.addText(style.getLineThickness().name());
+      fillColor.addText(style.getFillColor().name());
+    } else {
+      lineColor.addText(STANDARD);
+      lineStyle.addText(STANDARD);
+      lineThick.addText(STANDARD);
+      fillColor.addText(STANDARD);
+    }
+    GVSDefaultTreeNode children[] = pNode.getGVSChildNodes();
+    if (children != null) {
+      for (int index = 0; index < children.length; index++) {
+        GVSDefaultTreeNode childNode = children[index];
+        if (childNode != null) {
+          Element child = defaultNode.addElement(CHILD);
+          child.addText(String.valueOf(childNode.hashCode()));
+        }
+      }
+    }
+  }
 
   private void buildBinaryNode(Element pParent, GVSBinaryTreeNode pNode) {
     logger.info("CreateBinaryNode -->XML");
@@ -432,7 +434,7 @@ public class GVSTreeWithCollection {
       lineThick.addText(nodeStyle.getLineThickness().name());
       fillColor.addText(nodeStyle.getFillColor().name());
     } else {
-      logger.info("No Tyo. Standard will be set");
+      logger.info("No Style. Standard will be set");
       lineColor.addText(STANDARD);
       lineStyle.addText(STANDARD);
       lineThick.addText(STANDARD);
@@ -448,7 +450,7 @@ public class GVSTreeWithCollection {
         logger.info("Leftchild found");
       } else {
         logger.warn("Leftchild " + leftNode.getNodeLabel()
-            + " existiert nicht in der Collection");
+            + " not contained in collection");
       }
     }
     if (rightNode != null) {
@@ -458,7 +460,7 @@ public class GVSTreeWithCollection {
         logger.info("Right child found");
       } else {
         logger.warn("Right child " + rightNode.getNodeLabel()
-            + " existiert nicht in der Collection");
+            + " not contained in collection");
       }
     }
     logger.info("Finish Create BinaryNode -->XML");
@@ -471,24 +473,36 @@ public class GVSTreeWithCollection {
     Iterator<GVSTreeNode> checkerIt = toCheck.iterator();
     while (checkerIt.hasNext()) {
       int counter = 0;
-      GVSBinaryTreeNode actualNode = (GVSBinaryTreeNode) checkerIt.next();
+      GVSTreeNode actualNode = checkerIt.next();
       Iterator<GVSTreeNode> checkToOrigIt = gvsTreeNodes.iterator();
       while (checkToOrigIt.hasNext()) {
-        GVSBinaryTreeNode nodeToCheck = (GVSBinaryTreeNode) checkToOrigIt
-            .next();
-        if (nodeToCheck.getGVSLeftChild() == actualNode
-            || nodeToCheck.getGVSRightChild() == actualNode) {
-          counter++;
+        GVSTreeNode nodeToCheck = checkToOrigIt.next();
+        GVSTreeNode[] children = children(nodeToCheck);
+        if (children != null) {
+          for (int i = 0; i < children.length; i++) {
+            if (children[i] == actualNode) {
+              counter++;
+            }
+          }
         }
       }
       if (counter >= 2) {
         hasCycle = true;
-        logger.error("CICLE in the tree!!!! System Exit");
+        logger.error("CYCLE in the tree!!!! System Exit");
         break;
       }
     }
     return hasCycle;
+  }
 
+  private GVSTreeNode[] children(GVSTreeNode nodeToCheck) {
+    if (nodeToCheck instanceof GVSBinaryTreeNode) {
+      GVSBinaryTreeNode node = (GVSBinaryTreeNode) nodeToCheck;
+      return new GVSTreeNode[] {node.getGVSLeftChild(),node.getGVSRightChild()};
+    } else {
+      GVSDefaultTreeNode node = (GVSDefaultTreeNode) nodeToCheck;
+      return node.getGVSChildNodes();
+    }
   }
 
   public boolean isConnected() {
