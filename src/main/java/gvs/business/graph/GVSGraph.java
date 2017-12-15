@@ -553,32 +553,7 @@ public class GVSGraph {
     Element defaultVertex = pParent.addElement(DEFAULTVERTEX);
     defaultVertex.addAttribute(ATTRIBUTEID, String.valueOf(pVertex.hashCode()));
 
-    GVSStyle nodeStyle = pVertex.getStyle();
-    if (nodeStyle == null) {
-      nodeStyle = new GVSStyle();
-    }
-
-    Element label = defaultVertex.addElement(LABEL);
-    String vertexLabel = pVertex.getGVSVertexLabel();
-    if (vertexLabel == null) {
-      vertexLabel = "";
-    }
-
-    // TODO check if style.name() is okay -> or better get color string
-    label.addText(vertexLabel);
-    Element lineColor = defaultVertex.addElement(LINECOLOR);
-    lineColor.addText(nodeStyle.getLineColor().name());
-    Element lineStyle = defaultVertex.addElement(LINESTYLE);
-    lineStyle.addText(nodeStyle.getLineStyle().name());
-    Element lineThick = defaultVertex.addElement(LINETHICKNESS);
-    lineThick.addText(nodeStyle.getLineThickness().name());
-    Element fillColor = defaultVertex.addElement(FILLCOLOR);
-    fillColor.addText(nodeStyle.getFillColor().name());
-
-    if (nodeStyle.getIcon() != null) {
-      Element icon = defaultVertex.addElement(ICON);
-      icon.addText(nodeStyle.getIcon().name());
-    }
+    buildStyleAndLabel(pVertex, defaultVertex);
   }
 
   private void buildRelativVertex(Element pParent, GVSRelativeVertex pVertex) {
@@ -587,6 +562,15 @@ public class GVSGraph {
     relativeVertex.addAttribute(ATTRIBUTEID,
         String.valueOf(pVertex.hashCode()));
 
+    buildStyleAndLabel(pVertex, relativeVertex);
+    Element xPos = relativeVertex.addElement(XPOS);
+    xPos.addText(String.valueOf(pVertex.getX()));
+    Element yPos = relativeVertex.addElement(YPOS);
+    yPos.addText(String.valueOf(pVertex.getY()));
+  }
+
+  private void buildStyleAndLabel(GVSDefaultVertex pVertex,
+      Element relativeVertex) {
     GVSStyle nodeStyle = pVertex.getStyle();
     if (nodeStyle == null) {
       nodeStyle = new GVSStyle();
@@ -606,11 +590,6 @@ public class GVSGraph {
     lineThick.addText(nodeStyle.getLineThickness().name());
     Element fillColor = relativeVertex.addElement(FILLCOLOR);
     fillColor.addText(nodeStyle.getFillColor().name());
-    Element xPos = relativeVertex.addElement(XPOS);
-    xPos.addText(String.valueOf(pVertex.getX()));
-    Element yPos = relativeVertex.addElement(YPOS);
-    yPos.addText(String.valueOf(pVertex.getY()));
-
     if (nodeStyle.getIcon() != null) {
       Element icon = relativeVertex.addElement(ICON);
       icon.addText(nodeStyle.getIcon().name());

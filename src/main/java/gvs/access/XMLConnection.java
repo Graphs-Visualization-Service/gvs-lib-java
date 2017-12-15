@@ -84,7 +84,7 @@ public class XMLConnection {
       writer.flush();
       logger.info("Send data");
 
-      // Signal gor end data
+      // Signal end of data
       outStream.println(";");
       outStream.flush();
       logger.info("Finish send data");
