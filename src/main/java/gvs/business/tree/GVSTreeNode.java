@@ -1,7 +1,6 @@
 
 package gvs.business.tree;
 
-
 import gvs.business.styles.GVSStyle;
 
 /**

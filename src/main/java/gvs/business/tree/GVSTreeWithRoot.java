@@ -384,11 +384,12 @@ public class GVSTreeWithRoot {
   public boolean isConnected() {
     return connected;
   }
-  
+
   private GVSTreeNode[] children(GVSTreeNode nodeToCheck) {
     if (nodeToCheck instanceof GVSBinaryTreeNode) {
       GVSBinaryTreeNode node = (GVSBinaryTreeNode) nodeToCheck;
-      return new GVSTreeNode[] {node.getGVSLeftChild(),node.getGVSRightChild()};
+      return new GVSTreeNode[] { node.getGVSLeftChild(),
+          node.getGVSRightChild() };
     } else {
       GVSDefaultTreeNode node = (GVSDefaultTreeNode) nodeToCheck;
       return node.getGVSChildNodes();
